@@ -78,6 +78,8 @@ var FLICKR_CLIENT_ID = {
 	'adodson.com' : '8d7cfb86e6d6bfab49579c3bfdb95796'
 }[window.location.hostname];
 
+// join.me Register - https://developer.join.me
+var JOINME_CLIENT_ID = 'myenm7aw34dbgejhuw4sv8zz';
 
 // To make it a little easier
 var CLIENT_IDS_ALL = {
@@ -92,7 +94,8 @@ var CLIENT_IDS_ALL = {
 	soundcloud : SOUNDCLOUD_CLIENT_ID,
 	foursquare : FOURSQUARE_CLIENT_ID,
 	github : GITHUB_CLIENT_ID,
-	flickr: FLICKR_CLIENT_ID
+	flickr: FLICKR_CLIENT_ID,
+	vk: VK_CLIENT_ID
 };
 
 var TUMBLR_CLIENT_ID = {
@@ -100,7 +103,10 @@ var TUMBLR_CLIENT_ID = {
 	'adodson.com' : 'BHKkYCvKt33lL34iM1yWUhkYRw1lqwifbKKTfgh5FAX5uBzzxn'
 }[window.location.hostname];
 
-
+var VK_CLIENT_ID = {
+	'local.knarly.com' : '5001721',
+	'adodson.com' : '5001721'
+}[window.location.hostname];
 
 //
 // OAUTH PROXY

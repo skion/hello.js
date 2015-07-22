@@ -14,23 +14,18 @@
 		<script src="../../assets/sinonjs/sinon.js"></script>
 		<script src="../../assets/requirejs/require.js"></script>
 		<script src="../../assets/json2/json2.js"></script>
+		<script src="./libs/atob.js"></script>
 <!--[if !IE]>-->
 		<script src="./libs/Blob.js"></script>
 <!-- <![endif]-->
-		<script src="./libs/atob.js"></script>
-
+<!--[if lte IE 9]>
+		<script src="../../src/hello.polyfill.js"></script>
+<![endif]-->
 		<script src="../../src/hello.js"></script>
-		<script src="../../src/hello.legacy.js"></script>
 		<script src="../../src/hello.commonjs.js"></script>
 
 		<script>
-
-			require.config({
-//				urlArgs: '_=' + ( new Date() )
-			});
-
 			mocha.ui('bdd');
-
 		</script>
 
 		<script>
@@ -48,6 +43,7 @@
 				'./unit/utils/extend',
 				'./unit/utils/merge',
 				'./unit/utils/param',
+				'./unit/utils/qs',
 				'./unit/utils/responseHandler',
 				'./unit/utils/store',
 				'./unit/utils/toBlob',
@@ -56,6 +52,7 @@
 				// Core
 				'./unit/core/hello.api',
 				'./unit/core/hello.getAuthResponse',
+				'./unit/core/hello.init',
 				'./unit/core/hello.login',
 				'./unit/core/hello.logout',
 				'./unit/core/hello.use',

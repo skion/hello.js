@@ -1,57 +1,79 @@
-define([], function () {
+define([], function() {
 
-  return {
+	// Shim up IE8
+	if (!('withCredentials' in (new XMLHttpRequest()))) {
 
-    forEach: function (collection, fn) {
-      if (collection && collection.length) {
-        for (var i = 0; i < collection.length; i += 1) {
-          fn(collection[i]);
-        }
-      }
-    },
+		XMLHttpRequest.prototype.withCredentials = true;
+		hello.utils.xhr = function(method, url, headers, body, callback) {
+			var x = new XMLHttpRequest();
+			x.onreadystatechange = function() {
+				if (x.readyState === 4) {
+					var r = x.responseText;
+					r = JSON.parse(r);
+					callback(r);
+				}
+			};
 
-    getRequestProxy: function (originalRequest) {
+			x.open(method, url);
+			x.send(body);
+			return x;
+		};
+	}
 
-      var requestProxy = function (req, callback) {
+	return {
 
-        var r = {
-          network: req.network,
-          method: req.method,
-          url: req.url,
-          data: req.data,
-          xhr: true
-        };
+		forEach: function(collection, fn) {
+			if (collection && collection.length) {
+				for (var i = 0; i < collection.length; i += 1) {
+					fn(collection[i]);
+				}
+			}
+		},
 
-        var stubName = req.path + (req.options.stubType || '') + '.json';
-        r.url = './stubs/' + req.network + '/' + req.method + '/' + stubName;
-        originalRequest.call(hello.utils, r, callback);
-      };
+		getRequestProxy: function(originalRequest) {
 
-      return requestProxy;
-    },
+			var requestProxy = function(req, callback) {
 
-    sharedSetup: function () {
+				var r = {
+					network: req.network,
+					method: req.method,
+					url: req.url,
+					data: req.data,
+					query: {},
+					xhr: true
+				};
 
-      var originalGetAuthResponse = hello.getAuthResponse;
-      var originalRequest = hello.utils.request;
-      var requestProxy = this.getRequestProxy(originalRequest);
+				var stubName = req.path + (req.options.stubType || '') + '.json';
+				r.url = './stubs/' + req.network + '/' + req.method + '/' + stubName;
+				originalRequest.call(hello.utils, r, callback);
+			};
 
-      before(function () {
-        hello.getAuthResponse = function (service) {
-          return {
-            access_token: 'token'
-          };
-        };
-        hello.utils.request = requestProxy;
-      });
+			return requestProxy;
+		},
 
-      after(function () {
-        hello.getAuthResponse = originalGetAuthResponse;
-        hello.utils.request = originalRequest;
-      });
+		sharedSetup: function() {
 
-    }
+			var originalGetAuthResponse = hello.getAuthResponse;
+			var originalRequest = hello.utils.request;
+			var requestProxy = this.getRequestProxy(originalRequest);
 
-  };
+			before(function() {
+				hello.getAuthResponse = function(service) {
+					return {
+						access_token: 'token'
+					};
+				};
+
+				hello.utils.request = requestProxy;
+			});
+
+			after(function() {
+				hello.getAuthResponse = originalGetAuthResponse;
+				hello.utils.request = originalRequest;
+			});
+
+		}
+
+	};
 
 });
